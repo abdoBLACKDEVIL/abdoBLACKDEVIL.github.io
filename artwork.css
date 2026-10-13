@@ -1,0 +1,11 @@
+/* The motion has its own clouds; screen blending merges them with the hero atmosphere. */
+.hero-center{width:min(42vw,480px)}
+.hero-mark{mix-blend-mode:screen;mask-image:radial-gradient(ellipse 70% 75% at 50% 50%,#000 68%,transparent 100%);filter:contrast(1.12) brightness(1.04)}
+.hero-clouds{opacity:.7}
+.work-card-large{aspect-ratio:1.55}
+.work-card:not(.work-card-large){aspect-ratio:1.5}
+.work-card img{object-fit:contain}
+.work-card figcaption{background:linear-gradient(transparent,rgba(0,0,0,.9))}
+.concept-note{font-size:11px;line-height:1.5;color:#666;letter-spacing:.04em;margin-top:30px}
+@media(max-width:800px){.hero-center{width:min(78vw,420px)}.work-card-large{aspect-ratio:1.5}.work-card:not(.work-card-large){aspect-ratio:1.5}}
+@media(max-width:550px){.hero-center{width:95vw}.hero-center p{margin:-12px 0 0}.work-card-large,.work-card:not(.work-card-large){aspect-ratio:1.48}.work-card figcaption{gap:10px}.work-card figcaption strong{font-size:16px}}
