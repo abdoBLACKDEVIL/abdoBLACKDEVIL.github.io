@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#11110f">
+  <meta name="description" content="Explore a Blvk Ink custom art and design service.">
+  <title>Service — Blvk Ink</title>
+  <link rel="icon" href="assets/mark.png">
+  <link rel="stylesheet" href="styles.css?v=shared-34">
+  <link rel="stylesheet" href="service.css?v=1">
+  <script>try{const t=JSON.parse(sessionStorage.getItem('blvk-transition'));sessionStorage.removeItem('blvk-transition');if(t&&t.to===location.href&&Date.now()-t.at<8000&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('page-entering')}catch(e){}</script>
+  <script src="i18n.js?v=localization-15" defer></script>
+  <script src="catalog.js" defer></script>
+  <script src="script.js?v=spray-16" defer></script>
+  <script src="service-detail.js?v=1" defer></script>
+  <script src="cursor-spray.js?v=5" defer></script>
+</head>
+<body data-page="explore" class="service-page">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="page-curtain" aria-hidden="true"><span>Blvk Ink</span></div>
+  <header class="header">
+    <a class="wordmark header-badge" href="index.html" aria-label="Blvk Ink home"><span class="header-badge-art" aria-hidden="true"><img src="assets/blvkink-logo-transparent.png" alt="" width="1942" height="809"></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation">Menu ＋</button>
+    <nav id="navigation" aria-label="Main navigation"><a href="index.html" data-page="home">Home</a><a href="explore.html?view=walls" data-page="explore">Art for Spaces</a><a href="automotive.html" data-page="auto">Automotive</a><a href="shop.html" data-page="shop">Shop</a><a href="contact.html" data-page="contact">Contact</a></nav>
+    <div class="language-switch" role="group" aria-label="Language" dir="ltr"><a href="?lang=en" data-language="en" lang="en" aria-label="English">EN</a><span aria-hidden="true">/</span><a href="?lang=ar" data-language="ar" lang="ar" aria-label="العربية">AR</a></div>
+    <button type="button" class="request-toggle" aria-label="Open enquiry list">List <span data-count>0</span></button>
+  </header>
+
+  <main id="main" class="service-main">
+    <section class="service-hero" data-service-hero>
+      <img data-service-image alt="">
+      <div class="service-hero-shade" aria-hidden="true"></div>
+      <div class="service-hero-copy">
+        <a class="service-back" data-service-back href="explore.html">← Back to types</a>
+        <span class="service-kicker" data-service-kicker></span>
+        <h1 data-service-title></h1>
+        <p data-service-lede></p>
+        <a class="service-primary-action" data-service-contact href="contact.html">Start a project <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="service-overview section">
+      <div><span class="service-section-number">01</span><span class="eyebrow">The direction</span><h2 data-service-heading></h2></div>
+      <div class="service-overview-copy"><p data-service-overview></p><dl><div><dt>Best for</dt><dd data-service-best></dd></div><div><dt>Typical lead time</dt><dd data-service-lead></dd></div></dl></div>
+    </section>
+
+    <section class="service-visuals" aria-label="Service inspiration">
+      <figure><img data-service-visual="0" alt=""><figcaption>Material</figcaption></figure>
+      <figure><img data-service-visual="1" alt=""><figcaption>Process</figcaption></figure>
+      <figure><img data-service-visual="2" alt=""><figcaption>Finish</figcaption></figure>
+    </section>
+
+    <section class="service-process section">
+      <div class="service-process-heading"><span class="service-section-number">02</span><span class="eyebrow">How it works</span><h2>From idea<br>to final piece.</h2></div>
+      <ol data-service-steps></ol>
+    </section>
+
+    <section class="service-final-cta">
+      <span class="eyebrow">Made around you</span>
+      <h2>Have a project<br>in mind?</h2>
+      <p data-service-cta-copy></p>
+      <a class="service-primary-action" data-service-contact href="contact.html">Tell us about it <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-directory"><div class="footer-closing"><div class="footer-closing-copy"><span class="footer-kicker">Independent art &amp; design · Dubai</span><h2><span>Leave a</span> <em>mark.</em></h2><p>Walls, objects and machines shaped around your story.</p></div><a class="footer-project-link" href="contact.html"><span>Start a project</span><b aria-hidden="true">↗</b></a><img class="footer-emblem" src="assets/mark.png" alt="" width="1024" height="1536" aria-hidden="true"></div></div></footer>
+  <dialog class="gallery-dialog" aria-labelledby="gallery-title"><button type="button" class="dialog-close" data-close>Close ×</button><div class="gallery-picture"></div><div class="gallery-controls"><button type="button" data-prev aria-label="Previous image">←</button><div><span class="eyebrow" id="gallery-position"></span><h2 id="gallery-title"></h2></div><button type="button" data-next aria-label="Next image">→</button></div><div class="gallery-thumbs" aria-label="Image views"></div><div class="gallery-action"></div></dialog>
+  <dialog class="request-dialog" aria-labelledby="request-title"><button type="button" class="dialog-close" data-close>Close ×</button><div class="eyebrow">Your selection</div><h2 id="request-title">Enquiry list</h2><p class="muted">Sample collection · Orders are not open yet.</p><div id="request-items"></div><a class="button" id="prepare-request" href="contact.html">Prepare an enquiry ↗</a></dialog>
+  <div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

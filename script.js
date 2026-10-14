@@ -3,6 +3,11 @@ const tr = window.BLVK_I18N?.t || (value => value);
 const catalog = window.BLVK_CATALOG;
 const products = new Map(catalog.products.map(piece => [piece.id, piece]));
 const references = new Map([...catalog.art, ...catalog.automotive, ...catalog.products].map(piece => [piece.id, piece]));
+const serviceInterests = new Map([
+  ['texture-paint', 'Texture & Paint'], ['classic', 'Classic'], ['murals', 'Murals'], ['3d-walls', '3D Walls'],
+  ['special-requests', 'Special Requests'], ['designing-services', 'Designing Services'], ['decoration', 'Decoration'],
+  ['automotive', 'Custom automotive art']
+]);
 const params = new URLSearchParams(location.search);
 const root = document.documentElement;
 const header = document.querySelector('.header');
@@ -52,7 +57,7 @@ document.addEventListener('click', event => {
   const link = event.target.closest('a[href]');
   if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
   const destination = new URL(link.href, location.href);
-  const localPages = ['index.html', 'explore.html', 'work.html', 'automotive.html', 'shop.html', 'contact.html'].map(name => new URL(name, new URL('.', location.href)).pathname);
+  const localPages = ['index.html', 'explore.html', 'service.html', 'work.html', 'automotive.html', 'shop.html', 'contact.html'].map(name => new URL(name, new URL('.', location.href)).pathname);
   if (destination.origin !== location.origin || destination.protocol !== location.protocol || !localPages.includes(destination.pathname)) return;
   // Carry the list in contact links so direct-file previews also retain it.
   if (destination.pathname.endsWith('/contact.html') && !destination.searchParams.has('items') && requestIds.length) {
@@ -162,12 +167,53 @@ document.addEventListener('click', event => {
 });
 renderRequest();
 
+// Homepage gallery preview: each collage card controls the shared feature.
+(() => {
+  const showcase = document.querySelector('.home-shop-showcase');
+  if (!showcase || typeof showcase.querySelectorAll !== 'function') return;
+  const featuredIds = ['golden-study', 'classical-portrait', 'quiet-form'];
+  const controls = [...showcase.querySelectorAll('[data-shop-feature]')];
+  const card = showcase.querySelector('.shop-feature-card');
+  const media = showcase.querySelector('[data-shop-feature-media]');
+  const title = showcase.querySelector('[data-shop-feature-title]');
+  const category = showcase.querySelector('[data-shop-feature-category]');
+  const count = showcase.querySelector('[data-shop-feature-count]');
+  const view = showcase.querySelector('.shop-feature-view');
+  const add = showcase.querySelector('.shop-feature-add');
+  const categoryNames = { paintings: 'Paintings', sculpture: 'Sculpture', 'wall-art': 'Wall art' };
+
+  function selectFeature(id, moveFocus = false) {
+    const piece = products.get(id);
+    const index = featuredIds.indexOf(id);
+    if (!piece || index < 0) return;
+    controls.forEach(control => {
+      const selected = control.dataset.shopFeature === id;
+      control.classList.toggle('is-active', selected);
+      control.setAttribute('aria-pressed', String(selected));
+    });
+    card.classList.add('is-changing');
+    media.replaceChildren(makePhoto(piece));
+    title.textContent = tr(piece.title);
+    category.textContent = tr(categoryNames[piece.category] || piece.category);
+    count.textContent = `${String(index + 1).padStart(2, '0')} / ${String(featuredIds.length).padStart(2, '0')}`;
+    view.dataset.id = id;
+    view.setAttribute('aria-label', tr(`View ${piece.title}`));
+    add.dataset.add = id;
+    add.textContent = tr(requestIds.includes(id) ? 'In your enquiry list ✓' : 'Add to enquiry ＋');
+    if (moveFocus) title.setAttribute('tabindex', '-1');
+    requestAnimationFrame(() => requestAnimationFrame(() => card.classList.remove('is-changing')));
+  }
+
+  controls.forEach(control => control.addEventListener('click', () => selectFeature(control.dataset.shopFeature)));
+})();
+
 const form = document.querySelector('#enquiry-form');
 if (form) {
   const interest = references.get(params.get('interest'));
+  const serviceInterest = serviceInterests.get(params.get('interest'));
   const selectedNames = requestIds.map(id => products.get(id).title);
   if (interest && !selectedNames.includes(interest.title)) selectedNames.push(interest.title);
-  if (params.get('interest') === 'automotive') selectedNames.push('Custom automotive art');
+  if (serviceInterest && !selectedNames.includes(serviceInterest)) selectedNames.push(serviceInterest);
   const chips = document.querySelector('#contact-selection');
   selectedNames.forEach(name => { const chip = document.createElement('span'); chip.className = 'selection-chip'; chip.textContent = tr(name); chips.append(chip); });
   if (selectedNames.length) form.elements.message.value = window.BLVK_I18N?.language === 'ar' ? `أنا مهتم بـ: ${selectedNames.map(tr).join('، ')}.\n\n` : `I'm interested in: ${selectedNames.join(', ')}.\n\n`;
@@ -175,7 +221,9 @@ if (form) {
     event.preventDefault();
     if (!form.reportValidity()) return;
     const data = new FormData(form);
-    const draft = window.BLVK_I18N?.language === 'ar' ? `بلاك إنك — مسودة استفسار\nلم تُرسل. لم يبدأ استقبال الاستفسارات بالبريد بعد.\n\nإلى: info@blvk.ink\nالاسم: ${data.get('name')}\nالبريد الإلكتروني: ${data.get('email')}\n\n${data.get('message')}\n\nمجموعة نماذج؛ يُرجى تأكيد التوفر والأبعاد والسعر مع الاستوديو.` : `BLVK INK — ENQUIRY DRAFT\nNot sent. Email enquiries are not open yet.\n\nFor: info@blvk.ink\nName: ${data.get('name')}\nEmail: ${data.get('email')}\n\n${data.get('message')}\n\nSample collection; availability, dimensions, and price to be confirmed with the studio.`;
+    const projectType = data.get('project-type');
+    const projectLine = projectType ? (window.BLVK_I18N?.language === 'ar' ? `\nنوع المشروع: ${tr(projectType)}` : `\nProject type: ${projectType}`) : '';
+    const draft = window.BLVK_I18N?.language === 'ar' ? `بلاك إنك — مسودة استفسار\nلم تُرسل. لم يبدأ استقبال الاستفسارات بالبريد بعد.\n\nإلى: info@blvk.ink\nالاسم: ${data.get('name')}\nالبريد الإلكتروني: ${data.get('email')}${projectLine}\n\n${data.get('message')}\n\nمجموعة نماذج؛ يُرجى تأكيد التوفر والأبعاد والسعر مع الاستوديو.` : `BLVK INK — ENQUIRY DRAFT\nNot sent. Email enquiries are not open yet.\n\nFor: info@blvk.ink\nName: ${data.get('name')}\nEmail: ${data.get('email')}${projectLine}\n\n${data.get('message')}\n\nSample collection; availability, dimensions, and price to be confirmed with the studio.`;
     const blob = new Blob([draft], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob);
     const link = document.createElement('a'); link.href = url; link.download = 'blvk-ink-enquiry.txt'; document.body.append(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
@@ -201,6 +249,7 @@ if (form) {
     const ink = darkSurface ? '#fff' : '#090909';
     root.style.setProperty('--scroll-bg', `rgb(${rgb.join(',')})`);
     root.style.setProperty('--scroll-ink', ink);
+    root.style.setProperty('--spray-ink', ink);
     root.style.setProperty('--header-logo-filter', darkSurface ? 'brightness(1)' : 'brightness(0)');
     root.style.setProperty('--scroll-muted', darkSurface ? '#f0efed' : '#171717');
     root.style.setProperty('--scroll-line', darkSurface ? '#ffffff55' : '#09090955');

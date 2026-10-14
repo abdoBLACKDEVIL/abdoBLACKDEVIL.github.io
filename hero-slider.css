@@ -8,7 +8,7 @@
 .hero-slide::before{content:"";position:absolute;z-index:4;top:0;bottom:0;left:-22%;width:22%;pointer-events:none;background:linear-gradient(90deg,transparent,#fff4 46%,#fff9 50%,#fff2 55%,transparent);mix-blend-mode:soft-light;opacity:0;transform:skewX(-8deg)}
 .hero-slide.is-active::before{animation:slider-light-sweep 1.2s .08s cubic-bezier(.22,1,.36,1) both}
 .hero-slide-logo{background:radial-gradient(ellipse at 50% 42%,#f7f6f3,#e2e1df 70%)}
-.hero-carousel .hero-signature{position:relative;left:auto;top:auto;transform:none;max-width:90%;width:auto;margin:20px auto 0;text-align:center}
+.hero-carousel .hero-signature{position:relative;z-index:1;left:auto;top:auto;transform:none;max-width:90%;width:auto;margin:20px auto 0;text-align:center}
 .hero-carousel .logo-reveal{width:clamp(145px,21svh,240px);animation:none;opacity:1;filter:none;transform:none}
 .hero-slide-logo.is-active .logo-reveal{animation:slider-logo-reveal .8s cubic-bezier(.16,1,.3,1) both}
 .hero-carousel h1{font-size:clamp(28px,3.6vw,52px);margin:18px 0 6px}

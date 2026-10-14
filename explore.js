@@ -4,7 +4,49 @@
   const params = new URLSearchParams(location.search);
   const tabs = [...document.querySelectorAll('[data-view-tab]')];
   const views = [...document.querySelectorAll('[data-explore-view]')];
+  const typeCards = [...document.querySelectorAll('[data-type-card]')];
   const tr = window.BLVK_I18N?.t || (value => value);
+
+  function setTypeCard(card, expanded) {
+    card.classList.toggle('is-expanded', expanded);
+    const trigger = card.querySelector('.type-card-trigger');
+    const details = card.querySelector('.type-card-details');
+    trigger.setAttribute('aria-expanded', String(expanded));
+    details.setAttribute('aria-hidden', String(!expanded));
+    details.toggleAttribute('inert', !expanded);
+  }
+
+  function reflowTypeGrid(grid, update) {
+    const cards = [...grid.querySelectorAll('[data-type-card]')];
+    const before = new Map(cards.map(card => [card, card.getBoundingClientRect()]));
+    update();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !Element.prototype.animate) return;
+    cards.forEach(card => {
+      const from = before.get(card);
+      const to = card.getBoundingClientRect();
+      const x = from.left - to.left;
+      const y = from.top - to.top;
+      if (Math.abs(x) < 1 && Math.abs(y) < 1) return;
+      card.animate([{ transform: `translate(${x}px, ${y}px)` }, { transform: 'translate(0, 0)' }], {
+        duration: 480,
+        easing: 'cubic-bezier(.22,1,.36,1)'
+      });
+    });
+  }
+
+  typeCards.forEach(card => card.querySelector('.type-card-trigger').addEventListener('click', () => {
+    const expand = !card.classList.contains('is-expanded');
+    const grid = card.closest('.type-grid');
+    reflowTypeGrid(grid, () => grid.querySelectorAll('[data-type-card]').forEach(item => setTypeCard(item, item === card && expand)));
+    if (expand) requestAnimationFrame(() => card.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+  }));
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const expanded = document.querySelector('[data-type-card].is-expanded');
+    if (!expanded) return;
+    reflowTypeGrid(expanded.closest('.type-grid'), () => setTypeCard(expanded, false));
+    expanded.querySelector('.type-card-trigger').focus();
+  });
 
   function viewUrl(view) {
     const url = new URL(location.href);
@@ -20,6 +62,9 @@
       tab.href = viewUrl(tab.dataset.viewTab).href;
     });
     views.forEach(panel => { panel.hidden = panel.dataset.exploreView !== selected; });
+    typeCards.forEach(card => {
+      if (card.closest('[data-explore-view]').dataset.exploreView !== selected) setTypeCard(card, false);
+    });
     document.body.dataset.exploreView = selected;
     document.title = `${tr(tabs.find(tab => tab.dataset.viewTab === selected)?.textContent.trim() || 'Explore')} — Blvk Ink`;
     if (historyMode) history[historyMode]({ view: selected }, '', viewUrl(selected));

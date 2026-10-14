@@ -23,7 +23,7 @@ The four skateboard cards open `explore.html` with a `view` query parameter. `ex
 
 ### Hero artwork
 
-Slides 2–4 use the supplied images in `assets/`: `blvkink-create-your-vision-3840x2160.png`, `blvkink-spaces-that-belong-3840x2160.png`, and `blvkink-shop-clean-3840x2160.png`. The `.hero-slide-art` element in each slide in `index.html` is the replacement point. Headings, body copy, buttons, counts, and controls are live HTML, translated into Arabic, and rearrange for mobile. The Spaces image stays centered to retain its light/dark division.
+Slides 2–4 use optimized 2560px WebP images in `assets/`: `blvkink-create-your-vision-2560x1440.webp`, `blvkink-spaces-that-belong-2560x1440.webp`, and `blvkink-shop-clean-2560x1440.webp`. The `.hero-slide-art` element in each slide in `index.html` is the replacement point. Headings, body copy, buttons, counts, and controls are live HTML, translated into Arabic, and rearrange for mobile. The Spaces image stays centered to retain its light/dark division.
 
 ## Replacing the samples
 
